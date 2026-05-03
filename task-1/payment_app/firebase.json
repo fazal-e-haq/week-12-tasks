@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"pyment-app","appId":"1:280480175828:android:24e92a96fc76cc1f574d41","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"pyment-app","configurations":{"android":"1:280480175828:android:24e92a96fc76cc1f574d41","ios":"1:280480175828:ios:2e8d2f46d52b2fc5574d41"}}}}}}

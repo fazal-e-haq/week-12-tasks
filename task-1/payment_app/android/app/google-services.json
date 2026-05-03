@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "280480175828",
+    "project_id": "pyment-app",
+    "storage_bucket": "pyment-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280480175828:android:24e92a96fc76cc1f574d41",
+        "android_client_info": {
+          "package_name": "com.example.payment_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCgjWN16Gq31_paenEp3pvceIYI1n5DE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
