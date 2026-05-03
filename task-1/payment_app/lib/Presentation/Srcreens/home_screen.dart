@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:payment_app/Presentation/Srcreens/history_screen.dart';
 import 'package:payment_app/Services/payment_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,32 +13,56 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  void pay() async {
+  Future<void> makePayment() async {
     try {
-      final clientSecret = await PaymentService().createPaymentIntent(20);
-      await Stripe.instance.confirmPayment(
-        paymentIntentClientSecret: clientSecret,
-      );
+      final clientSecret = await PaymentService().createPaymentIntent(200);
+
+      if (clientSecret.isEmpty) {
+        throw Exception('Empty');
+      }
+      await Stripe.instance
+          .initPaymentSheet(
+            paymentSheetParameters: SetupPaymentSheetParameters(
+              paymentIntentClientSecret: clientSecret,
+              style: .dark,
+              customFlow: false,
+              merchantDisplayName: 'Fazal',
+            ),
+          )
+          .then((onValue) {
+            displayPaymentSheet(context);
+          });
       await saveTransation();
-      showDilog(true);
     } catch (e) {
-      debugPrint('Error : $e');
+      if (kDebugMode) {
+        print('Error : $e');
+      }
+    }
+  }
+
+  void displayPaymentSheet(BuildContext context) async {
+    try {
+      await Stripe.instance
+          .presentPaymentSheet()
+          .then((onValue) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('Paid Successfully')));
+          })
+          .onError((error, stackTrace) => throw Exception(error));
+    } on StripeException catch (e) {
+      if (kDebugMode) {
+        print('Error : $e');
+      }
     }
   }
 
   Future<void> saveTransation() async {
-    await FirebaseFirestore.instance.collection('collection').add({
-      'amount': 20,
+    await FirebaseFirestore.instance.collection('PaymentHistory').add({
+      'amount': 200,
       'status': 'success',
-      "time": FieldValue.serverTimestamp(),
+      'time': FieldValue.serverTimestamp(),
     });
-  }
-
-  void showDilog(bool isPayed) {
-    showDialog(
-      context: context,
-      builder: (context) => Text(isPayed ? 'Paid successfully' : 'Not Paid'),
-    );
   }
 
   @override
@@ -45,23 +70,21 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Payment App'),
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.history))],
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HistoryScreen()),
+              );
+            },
+            icon: Icon(Icons.history),
+          ),
+        ],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              CardFormField(
-                style: CardFormStyle(borderRadius: 20),
-                onCardChanged: (details) {
-                  debugPrint(details?.complete.toString());
-                },
-              ),
-
-              ElevatedButton(onPressed: pay, child: Text('P  a  y')),
-            ],
-          ),
+        child: Center(
+          child: ElevatedButton(onPressed: makePayment, child: Text('P  a  y')),
         ),
       ),
     );
