@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "988112606592",
+    "project_id": "ordermanagement-8ed09",
+    "storage_bucket": "ordermanagement-8ed09.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:988112606592:android:921ed0b1f05368fba35d65",
+        "android_client_info": {
+          "package_name": "com.example.order_management_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-vCXKzCRo3JN9tOVM429bIRlGfYIYGqc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
